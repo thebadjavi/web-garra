@@ -1,0 +1,105 @@
+:root {
+    --bg: #1a1a2e;
+    --card-bg: #161b22;
+    --neon-pink: #e94560;
+    --neon-blue: #0f3460;
+    --text: #ffffff;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    margin: 0;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+header { text-align: center; margin-bottom: 30px; }
+
+.logo-area { display: flex; justify-content: center; align-items: center; gap: 10px; }
+h1 { color: var(--neon-pink); font-size: 2.5rem; text-transform: uppercase; margin: 10px 0; }
+
+/* BUSCADOR */
+#search-input {
+    width: 100%;
+    max-width: 600px;
+    background: #000;
+    border: 2px solid var(--neon-blue);
+    padding: 15px;
+    color: #fff;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* BOTONES GARRA */
+.filters { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+
+.filter-btn {
+    position: relative;
+    background: var(--neon-blue);
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.filter-btn::before, .filter-btn::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    width: 6px;
+    height: 30px;
+    background: #888;
+    border-radius: 2px;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.filter-btn::before { left: -10px; transform: rotate(-20deg); }
+.filter-btn::after { right: -10px; transform: rotate(20deg); }
+
+.filter-btn:active::before { transform: rotate(45deg) translateY(10px); left: 5px; }
+.filter-btn:active::after { transform: rotate(-45deg) translateY(10px); right: 5px; }
+
+.filter-btn.active { background: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); }
+
+/* GRID Y TARJETAS */
+#machine-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-top: 5px solid var(--neon-pink);
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+/* ANIMACIONES */
+.entry { animation: prizeDrop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+.exit { animation: fallToHole 0.5s ease-in forwards; }
+
+@keyframes prizeDrop {
+    0% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes fallToHole {
+    100% { transform: translateY(800px) scale(0.1) rotate(30deg); opacity: 0; }
+}
+
+.tip {
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    border-left: 3px solid var(--neon-pink);
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GarraMap | Análisis Técnico de Máquinas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="arcade-container">
+        <header>
+            <div class="logo-area">
+                <span class="emoji-logo">🕹️</span>
+                <h1>GarraMap</h1>
+            </div>
+            <p class="subtitle">Catálogo de análisis técnico: Habilidad vs. Azar</p>
+            
+            <div class="search-section">
+                <input type="text" id="search-input" placeholder="Buscar por ciudad o máquina...">
+                <div class="filters">
+                    <button class="filter-btn active" data-type="all">TODAS</button>
+                    <button class="filter-btn" data-type="Habilidad">HABILIDAD</button>
+                    <button class="filter-btn" data-type="Azar">AZAR</button>
+                </div>
+            </div>
+        </header>
+
+        <main id="machine-grid">
+            <!-- Las tarjetas caen aquí -->
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
