@@ -19,3 +19,5 @@ No todas las máquinas son iguales. Mientras que en algunas la geometría y la f
 *   **HTML5 & CSS3**: Animaciones avanzadas con keyframes y transformaciones 3D.
 *   **JavaScript Vanilla**: Lógica de filtrado dinámico y manipulación del DOM sin librerías externas.
 *   **Git & GitHub Pages**: Control de versiones y despliegue continuo para que la guía esté siempre online.
+
+Esta web es un proyecto de estudio de programación y mecánica recreativa. Los análisis se basan en observaciones personales y no representan una declaración oficial sobre los establecimientos o fabricantes
