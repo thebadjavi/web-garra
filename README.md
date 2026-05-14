@@ -1,6 +1,6 @@
-## 🕹️ GarraMap
+## 🕹️ A-Garrados
 
-**GarraMap** es un catálogo interactivo de análisis técnico de máquinas de gancho (*crane games*). 
+**A-Garrados** es un catálogo interactivo de análisis técnico de máquinas de gancho (*crane games*). 
 El proyecto nació tras un viaje a Japón, donde descubrí la profunda diferencia entre las máquinas de **habilidad** y las de **azar**. 
 Mi objetivo es documentar cada máquina que encuentre en mis viajes, analizando su mecánica para ayudar a otros entusiastas a no perder monedas en vano.
 
