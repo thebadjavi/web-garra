@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GarraMap | Análisis Técnico de Máquinas</title>
+    <title>A-Garrados | Análisis de Máquinas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="arcade-container">
         <header>
             <div class="logo-area">
-                <span class="emoji-logo">🕹️</span>
-                <h1>GarraMap</h1>
+                <h1>🕹️ A-Garrados</h1>
             </div>
             <p class="subtitle">Catálogo de análisis técnico: Habilidad vs. Azar</p>
             
@@ -26,8 +25,23 @@
         </header>
 
         <main id="machine-grid">
-            <!-- Las tarjetas caen aquí -->
+            <!-- Las tarjetas se generan aquí desde JS -->
         </main>
+
+        <!-- Estructura del Modal (Ficha Técnica) -->
+        <div id="modal-maquina" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <div id="modal-body">
+                    <!-- Aquí se inyecta la info dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 A-Garrados. Proyecto educativo de análisis técnico y recreativo.</p>
+            <p>Aviso: Las opiniones son observaciones personales de carácter técnico y no representan declaraciones oficiales.</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>
