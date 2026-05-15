@@ -1,34 +1,36 @@
-const database = [
-    {
-        nombre: "E-Claw Cosmic",
-        lugar: "C.C. Màgic",
-        ciudad: "Badalona",
-        tipo: "Azar",
-        consejo: "¡Cuidado! Es una Elaut. La garra tiene fuerza de subida pero se abre al llegar arriba gracias a su sistema de control de voltaje. Solo ganarás si la máquina ha recaudado lo suficiente.",
-        foto: "https://www.udc.co.uk/image/cache/catalog/product_images/cranes/elaut/eclaw_cosmic_cyan_1600px_png24-1600x1600.png",
-        video: "https://www.youtube.com/embed/52zQtLg-o0E" 
-    },
-    {
-        nombre: "SEGA UFO CATCHER 9",
-        lugar: "C.C. Màgic",
-        ciudad: "Badalona",
-        tipo: "Habilidad",
-        consejo: "La pinza de dos brazos tiene fuerza constante. No busques 'agarrar' el peluche por el centro, usa el retroceso de los brazos para empujar el premio hacia el agujero.",
-        foto: "https://segaarcade.com/wp-content/uploads/2019/07/UFO-Catcher-9-Cabinet.jpg",
-        video: "https://www.youtube.com/embed/Ssh39L_X2_Q"
-    },
-    {
-        nombre: "MÁQUINA XL PREMIUM",
-        lugar: "Diagonal Mar",
-        ciudad: "Barcelona",
-        tipo: "Azar",
-        consejo: "Suele tener el 'payout' configurado cada 15-20 jugadas. Observa si el premio resbala inmediatamente o si al menos lo levanta un par de centímetros.",
-        foto: "", 
-        video: ""
-    }
-    // ... añade aquí el resto de tus máquinas
-];
+let database = []; // Empezamos vacío
 
+// FUNCIÓN ASÍNCRONA (Programación no bloqueante)
+async function cargarDatosDeFirebase() {
+    try {
+        const querySnapshot = await window.getDocs(window.collection(window.db, "maquinas"));
+         
+        database = [];
+        querySnapshot.forEach((doc) => {
+            database.push(doc.data());
+        });
+        
+        // Una vez tenemos los datos, cargamos la web
+        const primerBoton = document.querySelector('.filter-btn');
+        filtrar('Todas', primerBoton);
+        
+    } catch (error) {
+        console.error("Error cargando Firebase:", error);
+    }
+}
+
+// Sustituimos el window.onload antiguo por la llamada a Firebase
+window.onload = cargarDatosDeFirebase;
+
+// Leer base de datos desde Firestore
+async function cargarMaquinas() {
+    const querySnapshot = await getDocs(collection(db, "maquinas"));
+    const maquinas = [];
+    querySnapshot.forEach((doc) => {
+        maquinas.push(doc.data());
+    });
+    render(maquinas); // Tu función de dibujar tarjetas de siempre
+}
 function render(data) {
     const grid = document.getElementById('grid-maquinas');
     grid.innerHTML = '';
@@ -40,7 +42,9 @@ function render(data) {
             <h3>${maquina.nombre}</h3>
             <p style="color: #ff00ff; font-weight: bold;">📍 ${maquina.lugar} (${maquina.ciudad})</p>
             <p style="color: #00ffff; font-size: 0.85em;">MODO: ${maquina.tipo.toUpperCase()}</p>
-            <p style="font-size: 0.9em; line-height: 1.4; color: #ccc; margin-top: 15px;">💡 ${maquina.consejo}</p>
+            <img src="${maquina.foto || 'placeholder.jpg'}" alt="Foto de la máquina" style="width:100%; border-radius:10px;">
+        
+${maquina.video ? `<a href="${maquina.video}" target="_blank" class="video-link">📺 Ver video de la máquina</a>` : ''}            <p style="font-size: 0.9em; line-height: 1.4; color: #ccc; margin-top: 15px;">💡 ${maquina.consejo}</p>
         `;
         card.onclick = () => abrirDetalle(maquina);
         grid.appendChild(card);
@@ -127,9 +131,12 @@ window.onclick = (e) => {
     if (e.target.id === 'modal-maquina') cerrarModal();
 };
 
+
+/*  
 // AL CARGAR LA WEB
 window.onload = () => {
     const primerBoton = document.querySelector('.filter-btn');
     // Solo filtramos, NO abrimos el detalle al inicio
     filtrar('Todas', primerBoton);
 };
+*/

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Garrados | Panel de Control</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container { max-width: 600px; margin: 50px auto; padding: 20px; background: #1a1a2e; border: 2px solid #00ffcc; border-radius: 15px; box-shadow: 0 0 20px #00ffcc; }
+        .form-group { margin-bottom: 15px; }
+        input, textarea, select { width: 100%; padding: 10px; background: #0f3460; border: 1px solid #00ffcc; color: white; border-radius: 5px; margin-top: 5px; }
+        .login-section { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px dashed #00ffcc; }
+        #form-contenido { display: none; }
+        .maquina-item { border: 1px solid #334155; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px; background: #16213e; }
+        .btn-group { display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="login-section">
+        <h2>🔒 Panel de Gestión</h2>
+        <button id="btn-login" class="video-link">Identificarse con Google</button>
+        <p id="user-info" style="margin-top:10px; color: #00ffcc;"></p>
+    </div>
+
+    <div id="form-contenido">
+        <h3 id="form-title">Añadir Nueva Máquina</h3>
+        <form id="admin-form">
+            <div class="form-group"><label>Nombre</label><input type="text" id="nombre" required></div>
+            <div class="form-group"><label>Lugar</label><input type="text" id="lugar" required></div>
+            <div class="form-group"><label>Ciudad</label><input type="text" id="ciudad" required></div>
+            <div class="form-group">
+                <label>Tipo</label>
+                <select id="tipo"><option value="Habilidad">Habilidad</option><option value="Azar">Azar</option></select>
+            </div>
+            <div class="form-group"><label>URL Foto</label><input type="url" id="foto"></div>
+            <div class="form-group"><label>URL Vídeo</label><input type="url" id="video"></div>
+            <div class="form-group"><label>Consejo</label><textarea id="consejo" rows="3" required></textarea></div>
+            <button type="submit" id="btn-submit" class="video-link" style="width:100%">🚀 Publicar</button>
+            <button type="button" id="btn-cancelar" style="display:none; width:100%; margin-top:10px; background:transparent; color:gray; border:none; cursor:pointer;">Cancelar Edición</button>
+        </form>
+        <p id="status-msg" style="margin-top:15px; text-align:center;"></p>
+
+        <div id="lista-gestion" style="margin-top: 40px;">
+            <h3>🗂️ Inventario Actual</h3>
+            <div id="tabla-maquinas"></div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import firebaseConfig from './config.js';
+    
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    let editMode = false;
+    let editId = "";
+
+    // Login
+    document.getElementById('btn-login').onclick = () => signInWithPopup(auth, provider);
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('btn-login').style.display = 'none';
+            document.getElementById('form-contenido').style.display = 'block';
+            document.getElementById('user-info').innerText = "Admin: " + user.email;
+            cargarLista();
+        }
+    });
+
+    // Cargar Lista en tiempo real
+    function cargarLista() {
+        onSnapshot(collection(db, "maquinas"), (snapshot) => {
+            const tabla = document.getElementById('tabla-maquinas');
+            tabla.innerHTML = "";
+            snapshot.forEach((d) => {
+                const m = d.data();
+                const div = document.createElement('div');
+                div.className = 'maquina-item';
+                div.innerHTML = `
+                    <span><strong>${m.nombre}</strong> (${m.lugar})</span>
+                    <div class="btn-group">
+                        <button class="btn-edit video-link" style="padding:5px">✏️</button>
+                        <button class="btn-delete video-link" style="padding:5px; border-color:#ff4d4d; color:#ff4d4d">🗑️</button>
+                    </div>
+                `;
+                div.querySelector('.btn-edit').onclick = () => prepararEdicion(d.id, m);
+                div.querySelector('.btn-delete').onclick = () => borrar(d.id);
+                tabla.appendChild(div);
+            });
+        });
+    }
+
+    // Preparar Edición
+    window.prepararEdicion = (id, data) => {
+        editMode = true;
+        editId = id;
+        document.getElementById('nombre').value = data.nombre;
+        document.getElementById('lugar').value = data.lugar;
+        document.getElementById('ciudad').value = data.ciudad;
+        document.getElementById('tipo').value = data.tipo;
+        document.getElementById('foto').value = data.foto || "";
+        document.getElementById('video').value = data.video || "";
+        document.getElementById('consejo').value = data.consejo;
+        document.getElementById('btn-submit').innerText = "💾 Guardar Cambios";
+        document.getElementById('form-title').innerText = "Editando Máquina";
+        document.getElementById('btn-cancelar').style.display = "block";
+        window.scrollTo(0,0);
+    };
+
+    document.getElementById('btn-cancelar').onclick = () => {
+        editMode = false;
+        document.getElementById('admin-form').reset();
+        document.getElementById('btn-submit').innerText = "🚀 Publicar";
+        document.getElementById('btn-cancelar').style.display = "none";
+    };
+
+    // Borrar
+    async function borrar(id) {
+        if(confirm("¿Eliminar definitivamente?")) await deleteDoc(doc(db, "maquinas", id));
+    }
+
+    // Guardar/Actualizar
+    document.getElementById('admin-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const info = {
+            nombre: document.getElementById('nombre').value,
+            lugar: document.getElementById('lugar').value,
+            ciudad: document.getElementById('ciudad').value,
+            tipo: document.getElementById('tipo').value,
+            foto: document.getElementById('foto').value,
+            video: document.getElementById('video').value,
+            consejo: document.getElementById('consejo').value,
+            actualizado: serverTimestamp()
+        };
+
+        try {
+            if(editMode) {
+                await updateDoc(doc(db, "maquinas", editId), info);
+                editMode = false;
+            } else {
+                await addDoc(collection(db, "maquinas"), info);
+            }
+            document.getElementById('admin-form').reset();
+            document.getElementById('btn-submit').innerText = "🚀 Publicar";
+            document.getElementById('btn-cancelar').style.display = "none";
+        } catch (e) { alert("Error: No tienes permisos."); }
+    };
+</script>
+</body>
+</html>

@@ -35,6 +35,24 @@ h1 {
     margin: 0 20px; /* Espacio extra de seguridad a los lados */
     min-width: 110px; /* Un pelín más ancho para que el texto no agobie */
 }
+.video-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: transparent;
+    color: #00ffcc; /* Un turquesa neón que se lee bien */
+    border: 1px solid #00ffcc;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.video-link:hover {
+    background-color: #00ffcc;
+    color: #1a1a2e; /* Fondo oscuro al pasar el ratón */
+    box-shadow: 0 0 10px #00ffcc;
+}
 
 /* LAS GARRAS (Fuera del botón) */
 .filter-btn::before, .filter-btn::after {
@@ -78,12 +96,12 @@ h1 {
 
 .filter-btn.active::before {
     left: -15px; /* Se acerca para "agarrar" */
-    transform: translateY(-50%) rotate(35deg);
+    transform: translateY(-50%) rotate(-35deg);
 }
 
 .filter-btn.active::after {
     right: -15px;
-   transform: translateY(-50%) rotate(-35deg);
+   transform: translateY(-50%) rotate(35deg);
 }
 
 /* GRID DE TARJETAS */
@@ -154,4 +172,23 @@ h1 {
     width: 100%;
     border-radius: 10px;
     margin-top: 15px;
+}
+
+#buscador {
+    width: 80%;
+    max-width: 500px;
+    padding: 12px;
+    background: #111;
+    color: #00ffff;
+    border: 2px solid #00ffff;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+    outline: none;
+    transition: all 0.3s;
+}
+
+#buscador:focus {
+    border-color: #ff00ff; /* Cambia a rosa al clicar para escribir */
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
 }

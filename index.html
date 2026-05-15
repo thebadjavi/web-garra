@@ -38,5 +38,21 @@
         </footer>
 
     <script src="script.js"></script>
+
+   <script type="module">
+  // PRIMERO: Las importaciones (traemos las herramientas de Google)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import firebaseConfig from './config.js';
+   
+  // TERCERO: Inicializar (arrancamos el sistema)
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // CUARTO: Exportar al "mundo exterior" (para que script.js las vea)
+  window.db = db;
+  window.getDocs = getDocs;
+  window.collection = collection;
+</script>
 </body>
 </html>
