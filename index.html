@@ -7,42 +7,35 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="arcade-container">
-        <header>
-            <div class="logo-area">
-                <h1>🕹️ A-Garrados</h1>
-            </div>
-            <p class="subtitle">Catálogo de análisis técnico: Habilidad vs. Azar</p>
-            
-            <div class="search-section">
-                <input type="text" id="search-input" placeholder="Buscar por ciudad o máquina...">
-                <div class="filters">
-                    <button class="filter-btn active" data-type="all">TODAS</button>
-                    <button class="filter-btn" data-type="Habilidad">HABILIDAD</button>
-                    <button class="filter-btn" data-type="Azar">AZAR</button>
-                </div>
-            </div>
-        </header>
 
-        <main id="machine-grid">
-            <!-- Las tarjetas se generan aquí desde JS -->
-        </main>
+    <header>
+        <h1>🕹️ A-GARRADOS</h1>
+        <p style="text-align: center; color: white;">Catálogo de análisis técnico: Habilidad vs. Azar</p>
+    </header>
 
-        <!-- Estructura del Modal (Ficha Técnica) -->
-        <div id="modal-maquina" class="modal">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <div id="modal-body">
-                    <!-- Aquí se inyecta la info dinámicamente -->
-                </div>
-            </div>
+    <div style="text-align: center; margin: 20px;">
+        <input type="text" id="buscador" placeholder="Buscar por ciudad o máquina..." style="padding: 10px; width: 80%; max-width: 400px; background: #111; color: #00ffff; border: 1px solid #00ffff; border-radius: 5px;">
+    </div>
+
+    <div class="filter-container" style="text-align: center; margin-bottom: 30px;">
+        <button class="filter-btn" onclick="filtrar('Todas', this)">TODAS</button>
+        <button class="filter-btn" onclick="filtrar('Habilidad', this)">HABILIDAD</button>
+        <button class="filter-btn" onclick="filtrar('Azar', this)">AZAR</button>
+    </div>
+
+    <div id="grid-maquinas" class="grid-container">
         </div>
 
-        <footer>
+    <div id="modal-maquina" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="cerrarModal()">×</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+     <footer>
             <p>© 2026 A-Garrados. Proyecto educativo de análisis técnico y recreativo.</p>
             <p>Aviso: Las opiniones son observaciones personales de carácter técnico y no representan declaraciones oficiales.</p>
         </footer>
-    </div>
 
     <script src="script.js"></script>
 </body>

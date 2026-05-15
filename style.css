@@ -1,244 +1,157 @@
-:root {
-    --bg: #1a1a2e;
-    --card-bg: #161b22;
-    --neon-pink: #e94560;
-    --neon-blue: #0f3460;
-    --text: #ffffff;
-}
-
 body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #1a1a2e;
+    font-family: Arial, sans-serif;
+    color: white;
     margin: 0;
-    padding: 20px;
-    overflow-x: hidden;
+    padding: 0;
 }
 
-header { text-align: center; margin-bottom: 30px; }
-
-.logo-area { display: flex; justify-content: center; align-items: center; gap: 10px; }
-h1 { color: var(--neon-pink); font-size: 2.5rem; text-transform: uppercase; margin: 10px 0; }
-
-/* BUSCADOR */
-#search-input {
-    width: 100%;
-    max-width: 600px;
-    background: #000;
-    border: 2px solid var(--neon-blue);
-    padding: 15px;
-    color: #fff;
-    border-radius: 4px;
-    margin-bottom: 20px;
+h1 {
+    color: #ff4d4d;
+    text-align: center;
+    text-shadow: 3px 3px #000;
+    font-size: 3rem;
+    margin-top: 20px;
 }
 
-/* BOTONES GARRA */
-.filters { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+/* Contenedor de filtros */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 60px; /* Espacio para que las garras no choquen */
+    margin: 30px 0;
+}
 
 .filter-btn {
-    position: relative;
-    background: var(--neon-blue);
-    border: none;
-    color: white;
-    padding: 10px 25px;
-    font-weight: bold;
+    background: #111;
+    color: #00ffff;
+    border: 1px solid #00ffff;
+    padding: 10px 20px;
     cursor: pointer;
-    transition: 0.3s;
+    border-radius: 5px;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s;
+    margin: 0 20px; /* Espacio extra de seguridad a los lados */
+    min-width: 110px; /* Un pelín más ancho para que el texto no agobie */
 }
 
+/* LAS GARRAS (Fuera del botón) */
 .filter-btn::before, .filter-btn::after {
-    content: '';
+    display: block;
     position: absolute;
-    top: -15px;
-    width: 6px;
-    height: 30px;
-    background: #888;
-    border-radius: 2px;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    top: 50%;
+    font-size: 1.6rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Punta de goma: granate oscuro para resaltar sobre el rojo */
+    background: linear-gradient(to top, #440000 30%, #bbb 35%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 1px rgba(0,0,0,0.5));
 }
 
-.filter-btn::before { left: -10px; transform: rotate(-20deg); }
-.filter-btn::after { right: -10px; transform: rotate(20deg); }
+.filter-btn::before {
+    content: "\\\\";
+    left: -15px;
+    transform: translateY(-50%) rotate(-10deg);
+}
 
-.filter-btn:active::before { transform: rotate(45deg) translateY(10px); left: 5px; }
-.filter-btn:active::after { transform: rotate(-45deg) translateY(10px); right: 5px; }
+.filter-btn::after {
+    content: "//";
+    right: -15px;
+    transform: translateY(-50%) rotate(10deg);
+}
 
-.filter-btn.active { background: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); }
+/* HOVER: Colores neón al pasar el ratón */
+.filter-btn:hover::before, .filter-btn:hover::after {
+    background: linear-gradient(to top, #ff00ff 30%, #00ffff 35%);
+    -webkit-background-clip: text;
+}
 
-/* GRID Y TARJETAS */
-#machine-grid {
+/* BOTÓN ACTIVO */
+.filter-btn.active {
+    background-color: #ff4d4d !important;
+    color: white !important;
+    border-color: white;
+    box-shadow: 0 0 15px #ff4d4d;
+}
+
+.filter-btn.active::before {
+    left: -15px; /* Se acerca para "agarrar" */
+    transform: translateY(-50%) rotate(35deg);
+}
+
+.filter-btn.active::after {
+    right: -15px;
+   transform: translateY(-50%) rotate(-35deg);
+}
+
+/* GRID DE TARJETAS */
+.grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 25px;
     padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    border-top: 5px solid var(--neon-pink);
-    padding: 20px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    position: relative;
-}
-
-/* ANIMACIONES */
-.entry { animation: prizeDrop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
-.exit { animation: fallToHole 0.5s ease-in forwards; }
-
-@keyframes prizeDrop {
-    0% { transform: translateY(-100px) scale(0.5); opacity: 0; }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-@keyframes fallToHole {
-    100% { transform: translateY(800px) scale(0.1) rotate(30deg); opacity: 0; }
-}
-
-.tip {
-    background: rgba(0,0,0,0.3);
-    padding: 10px;
-    border-radius: 6px;
-    margin-top: 15px;
-    font-size: 0.9rem;
-    border-left: 3px solid var(--neon-pink);
-}
-/* Estilo para que las tarjetas recuperen su aspecto */
 .machine-card {
-    background: #1a1a1a;
+    background-color: #111;
     border: 2px solid #ff00ff;
     border-radius: 15px;
-    padding: 20px;
-    margin: 10px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 25px;
+    text-align: left;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
-    position: relative;
-    z-index: 10;
+    transition: all 0.3s;
+    animation: entrada 0.5s ease-out both;
 }
 
 .machine-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+    border-color: #00ffff;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
 }
 
-/* Estilos para el Modal (Ficha Técnica) */
+@keyframes entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* MODAL (Corregido para que no se corte) */
 .modal {
     display: none;
     position: fixed;
-    z-index: 100;
+    z-index: 1000;
     left: 0; top: 0;
     width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow-y: auto;
+    align-items: flex-start;
     justify-content: center;
-    align-items: center;
-    /* ESTO PERMITE EL SCROLL */
-    overflow-y: auto; 
-    padding: 20px 0;
-}
-
-.modal-content {
-    background: #111;
-    padding: 30px;
-    border: 2px solid #00ffff;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 600px;
-    position: relative;
-    /* ESTO EVITA QUE SE CORTE */
-    margin: auto; 
+    padding: 40px 0;
 }
 
 .modal-content {
     background-color: #111;
-    margin: auto;
-    padding: 20px;
-    border: 3px solid #00ffff;
-    width: 80%;
-    max-width: 600px;
+    padding: 30px;
+    border: 3px solid #ff00ff;
+    width: 90%;
+    max-width: 650px;
     border-radius: 20px;
     position: relative;
-    color: white;
+    margin-bottom: 50px;
 }
 
 .close-button {
     position: absolute;
-    right: 20px;
-    top: 10px;
+    right: 20px; top: 10px;
     color: #ff00ff;
     font-size: 40px;
-    font-weight: bold;
     cursor: pointer;
 }
 
-
-/* Definimos la animación de entrada */
-@keyframes entradaArcade {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.machine-card {
-    background: #1a1a1a;
-    border: 2px solid #ff00ff;
-    border-radius: 15px;
-    padding: 20px;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
-    
-    /* Esta línea es la clave: se ejecuta cada vez que se crea la tarjeta */
-    animation: entradaArcade 0.4s ease-out forwards;
-    
-    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-}
-
-.machine-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
-    border-color: #00ffff;
-}
-
-/* Animación de entrada (Desplazamiento hacia abajo como antes) */
-@keyframes entradaCaida {
-    from {
-        opacity: 0;
-        transform: translateY(-50px); /* Viene desde arriba, como la garra */
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Animación de salida (Al agujero del premio) */
-@keyframes alAgujero {
-    0% {
-        transform: scale(1) translateX(0);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(0.8) translateX(-100px) translateY(50px);
-        opacity: 0.5;
-    }
-    100% {
-        transform: scale(0) translateX(-200px) translateY(200px);
-        opacity: 0;
-    }
-}
-
-.machine-card {
-    /* ... tus estilos de neón ... */
-    animation: entradaCaida 0.5s ease-out forwards;
-}
-
-/* Clase que activaremos por JS antes de borrar la tarjeta */
-.ganado {
-    animation: alAgujero 0.6s ease-in forwards !important;
-    pointer-events: none; /* Para que no se pueda clicar mientras cae */
+.modal-media-container img, .modal-media-container iframe {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 15px;
 }

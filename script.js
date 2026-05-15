@@ -1,8 +1,6 @@
 const database = [
-    // --- ZONA BADALONA Y BARCELONA CENTRO ---
     {
         nombre: "E-Claw Cosmic",
-        marca: "Elaut",
         lugar: "C.C. Màgic",
         ciudad: "Badalona",
         tipo: "Azar",
@@ -12,7 +10,6 @@ const database = [
     },
     {
         nombre: "SEGA UFO CATCHER 9",
-        marca: "Sega",
         lugar: "C.C. Màgic",
         ciudad: "Badalona",
         tipo: "Habilidad",
@@ -22,171 +19,77 @@ const database = [
     },
     {
         nombre: "MÁQUINA XL PREMIUM",
-        marca: "Falgás",
         lugar: "Diagonal Mar",
         ciudad: "Barcelona",
         tipo: "Azar",
         consejo: "Suele tener el 'payout' configurado cada 15-20 jugadas. Observa si el premio resbala inmediatamente o si al menos lo levanta un par de centímetros.",
         foto: "", 
         video: ""
-    },
-    {
-        nombre: "Toy Soldier",
-        marca: "Coastal Amusements",
-        lugar: "SOM Multiespai (New Park)",
-        ciudad: "Barcelona",
-        tipo: "Azar",
-        consejo: "Mecánica algo anticuada pero traicionera. La pinza suele girar unos grados al bajar. Fíjate en la torsión del cable antes de pulsar el botón de bajada.",
-        foto: "https://www.coastalamusements.com/wp-content/uploads/2015/09/Toy-Soldier-web.png",
-        video: ""
-    },
-
-    // --- ZONA CORNELLÀ Y BAIX LLOBREGAT ---
-    {
-        nombre: "The Big One (Gigante)",
-        marca: "Elaut",
-        lugar: "C.C. Splau (Ilusiona)",
-        ciudad: "Cornellà de Llobregat",
-        tipo: "Azar",
-        consejo: "Máquina para peluches XXL. La garra pesa muchísimo, a veces el propio peso de la garra empuja los peluches hacia abajo en vez de agarrarlos. Apunta a las cabezas.",
-        foto: "https://www.udc.co.uk/image/cache/catalog/product_images/cranes/elaut/big_one_1600px_png24-1600x1600.png",
-        video: ""
-    },
-    {
-        nombre: "Grab N Go",
-        marca: "ICE Games",
-        lugar: "La Farga",
-        ciudad: "L'Hospitalet de Llobregat",
-        tipo: "Habilidad",
-        consejo: "Es una de las pocas grúas americanas que se ven por aquí. Tiene un modo 'play till you win' (juega hasta ganar) en algunos locales, pero si es pago normal, la fuerza de cierre es bastante decente.",
-        foto: "https://www.icegame.com/images/thumbs/000/0001053_grab-n-go-3-player.png",
-        video: "https://www.youtube.com/embed/0m9zR0mD-bI"
-    },
-
-    // --- ZONA VALLÈS Y MARESME ---
-    {
-        nombre: "Barber Cut Lite",
-        marca: "Namco",
-        lugar: "Parc Vallès",
-        ciudad: "Terrassa",
-        tipo: "Azar",
-        consejo: "No es de garra, es de cortar un hilo. Aunque parece 100% habilidad (alinear las tijeras), la máquina está programada para que la cuchilla no avance lo suficiente hasta alcanzar el bote de dinero.",
-        foto: "https://primetimeamusements.com/wp-content/uploads/2015/04/barbercutlite.jpg",
-        video: ""
-    },
-    {
-        nombre: "Grúa Clásica Redonda",
-        marca: "Falgás",
-        lugar: "Mataró Parc",
-        ciudad: "Mataró",
-        tipo: "Azar",
-        consejo: "El cristal curvo distorsiona la profundidad. Mírala siempre desde el lateral antes de soltar la pinza. Fuerza muy baja, diseñada para vaciar bolsillos.",
-        foto: "",
-        video: ""
     }
+    // ... añade aquí el resto de tus máquinas
 ];
 
-const grid = document.getElementById('machine-grid');
-const searchInput = document.getElementById('search-input');
-
 function render(data) {
+    const grid = document.getElementById('grid-maquinas');
     grid.innerHTML = '';
-    data.forEach(maquina => {
+    data.forEach((maquina, index) => {
         const card = document.createElement('div');
         card.className = 'machine-card';
+        card.style.animationDelay = `${index * 0.05}s`;
         card.innerHTML = `
             <h3>${maquina.nombre}</h3>
-            <p>📍 ${maquina.lugar} (${maquina.ciudad})</p>
-            <p class="tag-${maquina.tipo.toLowerCase()}">MODO: ${maquina.tipo.toUpperCase()}</p>
-            <p>💡 ${maquina.consejo}</p>
+            <p style="color: #ff00ff; font-weight: bold;">📍 ${maquina.lugar} (${maquina.ciudad})</p>
+            <p style="color: #00ffff; font-size: 0.85em;">MODO: ${maquina.tipo.toUpperCase()}</p>
+            <p style="font-size: 0.9em; line-height: 1.4; color: #ccc; margin-top: 15px;">💡 ${maquina.consejo}</p>
         `;
         card.onclick = () => abrirDetalle(maquina);
         grid.appendChild(card);
     });
 }
 
+function filtrar(tipo, elemento) {
+    const botones = document.querySelectorAll('.filter-btn');
+    botones.forEach(btn => btn.classList.remove('active'));
+    if (elemento) elemento.classList.add('active');
+
+    if (tipo === 'Todas') {
+        render(database);
+    } else {
+        render(database.filter(m => m.tipo === tipo));
+    }
+}
+
 function abrirDetalle(maquina) {
     const modal = document.getElementById('modal-maquina');
     const body = document.getElementById('modal-body');
     
-    if (!body) return;
-
-    // Generamos el enlace de Google Maps usando el lugar y la ciudad
-    const mapaUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(maquina.lugar + ' ' + maquina.ciudad)}`;
-
     body.innerHTML = `
-        <h2 style="color: #ff00ff; text-shadow: 0 0 10px #ff00ff; text-align: center;">${maquina.nombre}</h2>
-        
-        <!-- BOTÓN CÓMO LLEGAR -->
-        <div style="text-align: center; margin-bottom: 15px;">
-            <a href="${mapaUrl}" target="_blank" style="background: #4285F4; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px;">
-                📍 Cómo llegar (Google Maps)
-            </a>
+        <h2 style="color: #ff4d4d; text-align: center;">${maquina.nombre}</h2>
+        <div class="modal-media-container">
+            ${maquina.foto ? `<img src="${maquina.foto}">` : ''}
+            ${maquina.video ? `<iframe height="315" src="${maquina.video}" frameborder="0" allowfullscreen></iframe>` : ''}
         </div>
-
-        <p style="text-align: center; color: #00ffff;"><strong>Fabricante:</strong> ${maquina.marca}</p>
-        
-        <div class="modal-media-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
-            ${maquina.foto ? `<img src="${maquina.foto}" style="width:100%; border: 2px solid #00ffff; border-radius: 10px;">` : ''}
-            ${maquina.video ? `
-                <div class="video-wrapper" style="position: relative; padding-bottom: 56.25%; height: 0;">
-                    <iframe src="${maquina.video}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px; border: 2px solid #ff00ff;" frameborder="0" allowfullscreen></iframe>
-                </div>` : ''}
-        </div>
-
-        <div class="tech-info" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #ff00ff;">
-            <h4 style="margin-top: 0; color: #ff00ff;">🔍 Informe de Mecánica</h4>
-            <p style="line-height: 1.6;">${maquina.consejo}</p>
+        <div style="margin-top: 20px; padding: 15px; background: #222; border-radius: 10px; border-left: 5px solid #ff4d4d;">
+            <h4 style="margin: 0 0 10px 0; color: #ff4d4d;">🔍 INFORME DE MECÁNICA</h4>
+            <p style="margin: 0; line-height: 1.5;">${maquina.consejo}</p>
         </div>
     `;
-    
     modal.style.display = "flex";
     document.body.style.overflow = "hidden";
 }
 
-// Función para cerrar el modal de forma limpia
 function cerrarModal() {
-    const modal = document.getElementById('modal-maquina');
-    modal.style.display = "none";
-    document.getElementById('modal-body').innerHTML = ""; // Limpia el video para que deje de sonar
-    document.body.style.overflow = "auto"; // LIBERA el scroll al cerrar
+    document.getElementById('modal-maquina').style.display = "none";
+    document.body.style.overflow = "auto";
 }
 
-// Eventos de cierre
-document.querySelector('.close-button').onclick = cerrarModal;
-
-window.onclick = (event) => {
-    const modal = document.getElementById('modal-maquina');
-    if (event.target === modal) {
-        cerrarModal();
-    }
+window.onclick = (e) => {
+    if (e.target.id === 'modal-maquina') cerrarModal();
 };
 
-// Filtros y búsqueda
-searchInput.oninput = () => {
-    const val = searchInput.value.toLowerCase();
-    render(database.filter(m => m.nombre.toLowerCase().includes(val) || m.ciudad.toLowerCase().includes(val)));
+// AL CARGAR LA WEB
+window.onload = () => {
+    const primerBoton = document.querySelector('.filter-btn');
+    // Solo filtramos, NO abrimos el detalle al inicio
+    filtrar('Todas', primerBoton);
 };
-
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.onclick = () => {
-        const activeBtn = document.querySelector('.filter-btn.active');
-        if (activeBtn) activeBtn.classList.remove('active');
-        btn.classList.add('active');
-        
-        const type = btn.dataset.type;
-        const tarjetasActuales = document.querySelectorAll('.machine-card');
-        
-        tarjetasActuales.forEach(card => card.classList.add('ganado'));
-
-        setTimeout(() => {
-            const filtrados = type === 'all' 
-                ? database 
-                : database.filter(m => m.tipo === type);
-            render(filtrados);
-        }, 500); 
-    };
-});
-
-// Render inicial
-render(database);
