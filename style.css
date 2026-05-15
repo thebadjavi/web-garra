@@ -17,16 +17,22 @@ h1 {
 /* Contenedor de filtros */
 .filter-container {
     display: flex;
+    flex-wrap: wrap;  
     justify-content: center;
-    gap: 60px; /* Espacio para que las garras no choquen */
-    margin: 30px 0;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 0 10px;
 }
 
 .filter-btn {
+    flex: 1;
+    min-width: 120px; /* Pero no se hacen más pequeños que esto */
+    max-width: 200px;
+    padding: 12px 5px;
+    font-size: 14px;
     background: #111;
     color: #00ffff;
     border: 1px solid #00ffff;
-    padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
     font-weight: bold;
@@ -52,6 +58,13 @@ h1 {
     background-color: #00ffcc;
     color: #1a1a2e; /* Fondo oscuro al pasar el ratón */
     box-shadow: 0 0 10px #00ffcc;
+}
+
+@media (max-width: 480px) {
+    .filter-btn {
+        font-size: 12px;
+        padding: 10px 2px;
+    }
 }
 
 /* LAS GARRAS (Fuera del botón) */
