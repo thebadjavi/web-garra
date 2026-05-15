@@ -47,6 +47,31 @@ function render(data) {
     });
 }
 
+// BUSCADOR INTELIGENTE: Ignora tildes y mayúsculas
+document.getElementById('buscador').addEventListener('input', (e) => {
+    // Función para quitar acentos: convierte 'Màgic' en 'Magic'
+    const normalizar = (texto) => texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    
+    const textoUsuario = normalizar(e.target.value);
+    
+    const filtrados = database.filter(maquina => {
+        const nombre = normalizar(maquina.nombre);
+        const ciudad = normalizar(maquina.ciudad);
+        const lugar = normalizar(maquina.lugar);
+        
+        return nombre.includes(textoUsuario) || 
+               ciudad.includes(textoUsuario) || 
+               lugar.includes(textoUsuario);
+    });
+
+    // Reset de botones visual
+    const botones = document.querySelectorAll('.filter-btn');
+    botones.forEach(btn => btn.classList.remove('active'));
+
+    render(filtrados);
+});
+
+
 function filtrar(tipo, elemento) {
     const botones = document.querySelectorAll('.filter-btn');
     botones.forEach(btn => btn.classList.remove('active'));
@@ -63,17 +88,32 @@ function abrirDetalle(maquina) {
     const modal = document.getElementById('modal-maquina');
     const body = document.getElementById('modal-body');
     
+    // Generamos el enlace de Google Maps con el lugar y la ciudad
+    const direccionMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(maquina.lugar + ' ' + maquina.ciudad)}`;
+
     body.innerHTML = `
-        <h2 style="color: #ff4d4d; text-align: center;">${maquina.nombre}</h2>
-        <div class="modal-media-container">
-            ${maquina.foto ? `<img src="${maquina.foto}">` : ''}
-            ${maquina.video ? `<iframe height="315" src="${maquina.video}" frameborder="0" allowfullscreen></iframe>` : ''}
+        <h2 style="color: #ff4d4d; text-align: center; text-transform: uppercase; letter-spacing: 2px;">${maquina.nombre}</h2>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="${direccionMaps}" target="_blank" style="display: inline-block; background: #4285F4; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s;">
+                📍 CÓMO LLEGAR (MAPS)
+            </a>
         </div>
-        <div style="margin-top: 20px; padding: 15px; background: #222; border-radius: 10px; border-left: 5px solid #ff4d4d;">
-            <h4 style="margin: 0 0 10px 0; color: #ff4d4d;">🔍 INFORME DE MECÁNICA</h4>
-            <p style="margin: 0; line-height: 1.5;">${maquina.consejo}</p>
+
+        <div class="modal-media-container">
+            ${maquina.foto ? `<img src="${maquina.foto}" style="border: 2px solid #555;">` : ''}
+            ${maquina.video ? `
+                <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin-top:15px;">
+                    <iframe src="${maquina.video}" style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:10px;" frameborder="0" allowfullscreen></iframe>
+                </div>` : ''}
+        </div>
+
+        <div style="margin-top: 25px; padding: 15px; background: #222; border-radius: 10px; border-left: 5px solid #ff4d4d; box-shadow: inset 0 0 10px #000;">
+            <h4 style="margin: 0 0 10px 0; color: #ff4d4d; font-size: 1.1em;">🔍 INFORME DE MECÁNICA</h4>
+            <p style="margin: 0; line-height: 1.6; color: #eee; font-size: 0.95em;">${maquina.consejo}</p>
         </div>
     `;
+    
     modal.style.display = "flex";
     document.body.style.overflow = "hidden";
 }
